@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.router import router as api_router
 
+from app.api.router import router as api_router
 from app.core.config import settings
+from app.services.queue import QueueService
 
 
 def get_application():
@@ -31,3 +32,14 @@ def get_application():
 
 
 app = get_application()
+rabbitmq_handler = QueueService()
+
+
+@app.on_event("startup")
+async def startup_event():
+    await rabbitmq_handler.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await rabbitmq_handler.close()

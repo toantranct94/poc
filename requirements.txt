@@ -3,3 +3,5 @@ uvicorn==0.15.0
 pydantic[email]
 python-dotenv
 redis
+pika
+aio_pika

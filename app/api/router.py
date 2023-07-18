@@ -2,9 +2,11 @@ from fastapi import APIRouter, BackgroundTasks, status
 
 from app.models.schemas.health import Health
 from app.services.cache import CacheService
+from app.services.queue import QueueService
 
 router = APIRouter()
 cache_service = CacheService()
+queue_service = QueueService()
 
 
 @router.get(
@@ -35,3 +37,19 @@ async def update(
         background_tasks.add_task(cache_service.set_cache, key, "test")
         return {"key": key, "value": "test", "from": "raw"}
     return {"key": key, "value": value.decode(), "from": "redis"}
+
+
+@router.post("/produce")
+async def produce(message: str):
+    await queue_service.publish_message(message, routing_key='my_queue')
+    return {"message": "Message published"}
+
+
+async def consume_callback(message):
+    print(f"Received message: {message}")
+
+
+@router.get("/consume")
+async def consume():
+    await queue_service.consume_messages('my_queue', callback=consume_callback)
+    return {"message": "Consuming finished"}

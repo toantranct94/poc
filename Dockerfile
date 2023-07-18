@@ -5,8 +5,8 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 COPY ./.env /code/.env
 
-# Install Redis dependencies
-RUN apt-get update && apt-get install -y redis-server
+# Install Redis and RabbitMQ dependencies
+RUN apt-get update && apt-get install -y redis-server rabbitmq-server
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
