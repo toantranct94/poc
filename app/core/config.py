@@ -14,6 +14,15 @@ class Settings(BaseSettings):
     """
     debug: bool = True
 
+    # rabbitmq
+    amqp_url: str = "amqp://guest:guest@localhost"
+
+    # redis
+    redis_host: str = "localhost"
+    redis_port: str = 6379
+    redis_password: str = None
+    redis_db: int = 0
+
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(
         cls, v: Union[str, List[str]]

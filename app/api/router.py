@@ -1,3 +1,4 @@
+import json
 import aio_pika
 from fastapi import APIRouter, BackgroundTasks, status
 
@@ -6,7 +7,6 @@ from app.services.cache import CacheService
 from app.services.queue import QueueService
 
 router = APIRouter()
-cache_service = CacheService()
 queue_service = QueueService()
 
 
@@ -30,19 +30,38 @@ async def update(
     background_tasks: BackgroundTasks,
 ):
     """
-    Check heath
+    sample code for get/set cache with redis and rabbitmq
+     - key: redis key
+     - value: any
     """
-    key = "test"
-    value = cache_service.get(key)
+    key = "redis"
+    item = {
+        "key": key,
+        "value": {}
+    }
+    value = CacheService.get(key)
     if value is None:
-        background_tasks.add_task(cache_service.set_cache, key, "test")
-        return {"key": key, "value": "test", "from": "raw"}
-    return {"key": key, "value": value.decode(), "from": "redis"}
+        item.update({
+            "value": {
+                "v": 1
+            }
+        })
+        background_tasks.add_task(
+            queue_service.publish_message, json.dumps(item))
+        item.update({
+            'from': 'raw'
+        })
+        return item
+    item.update({
+        'value': value,
+        'from': 'redis'
+    })
+    return item
 
 
 @router.post("/produce")
 async def produce(message: str):
-    await queue_service.publish_message(message, routing_key='')
+    await queue_service.publish_message(message, routing_key='cache')
     return {"message": "Message published"}
 
 

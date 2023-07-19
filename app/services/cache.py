@@ -1,25 +1,34 @@
-import redis
-# Redis connection parameters
+import json
 from typing import Any
 
+import redis
 
-redis_host = 'redis'
-redis_port = 6379
-redis_password = None  # If your Redis instance has a password, provide it here
-redis_db = 0
+from app.core.config import settings
 
 redis_client = redis.Redis(
-    host=redis_host,
-    port=redis_port,
-    password=redis_password,
-    db=redis_db
+    host=settings.redis_host,
+    port=settings.redis_port,
+    password=settings.redis_password,
+    db=settings.redis_db
 )
 
 
 class CacheService():
 
-    def get(self, key: str) -> Any:
-        return redis_client.get(key)
+    @staticmethod
+    def get(key: str) -> Any:
+        value = redis_client.get(key)
+        if value:
+            return value.decode()
+        return None
 
-    def set_cache(self, key: str, value: Any) -> None:
-        redis_client.set(key, value)
+    @staticmethod
+    def insert(key: str, value: Any) -> None:
+        redis_client.set(key, CacheService.__standalize(value))
+
+    @staticmethod
+    def __standalize(value: Any) -> str:
+        if isinstance(value, dict) or isinstance(value, list):
+            return json.dumps(value)
+        else:
+            return value

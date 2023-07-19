@@ -1,6 +1,24 @@
 version: "3.10"
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Expose RabbitMQ management interface port
+    tty: true
+    command: bash -c "rabbitmq-server;"
+    networks:
+      - back
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - back
+
   app:
     build: .
     env_file:
@@ -9,14 +27,18 @@ services:
       - "8000:8000"
     depends_on:
       - rabbitmq
+    networks:
+      - back
 
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
+  listener:
+    build: .
+    command:  bash -c "sleep 10; python consume.py"
+    depends_on:
+        - rabbitmq
+        - redis
+    networks:
+      - back
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports:
-      - "5672:5672"
-      - "15672:15672"  # Expose RabbitMQ management interface port
+
+networks:
+  back:
