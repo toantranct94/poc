@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     redis_port: str = 6379
     redis_password: str = None
     redis_db: int = 0
+    default_cache_ttl: int = 3600
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(

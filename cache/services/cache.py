@@ -3,7 +3,7 @@ from typing import Any
 import redis
 import random
 
-from app.core.config import settings
+from cache.core.config import settings
 
 redis_client = redis.Redis(
     host=settings.redis_host,

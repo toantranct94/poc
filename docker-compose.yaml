@@ -21,24 +21,11 @@ services:
 
   app:
     build: .
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
     depends_on:
       - rabbitmq
+      - redis
     networks:
       - back
-
-  listener:
-    build: .
-    command:  bash -c "sleep 10; python consume.py"
-    depends_on:
-        - rabbitmq
-        - redis
-    networks:
-      - back
-
 
 networks:
   back:

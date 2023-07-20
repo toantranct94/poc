@@ -57,23 +57,3 @@ async def update(
         'from': 'redis'
     })
     return item
-
-
-@router.post("/produce")
-async def produce(message: str):
-    await queue_service.publish_message(message, routing_key='cache')
-    return {"message": "Message published"}
-
-
-async def consume_callback(message: aio_pika.IncomingMessage):
-    async with message.process():
-        # Retrieve the message body
-        body = message.body.decode()
-        # Process the message as needed
-        print("Received message:", body)
-
-
-@router.get("/consume")
-async def consume():
-    await queue_service.consume_messages('', callback=consume_callback)
-    return {"message": "Consuming finished"}

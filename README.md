@@ -5,3 +5,10 @@ This project was generated via [init-fastapi](https://github.com/toantranct94/in
 ## License
 
 This project is licensed under the terms of the None license.
+
+
+## Cache
+
+```
+docker-compose up -d
+```
