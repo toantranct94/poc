@@ -1,14 +1,13 @@
 version: "3.10"
 
 services:
-
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - "5672:5672"
       - "15672:15672"  # Expose RabbitMQ management interface port
     tty: true
-    command: bash -c "rabbitmq-server;"
+    command: rabbitmq-server
     networks:
       - back
 

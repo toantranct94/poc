@@ -5,7 +5,7 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 
 # Install Redis and RabbitMQ dependencies
-RUN apt-get update && apt-get install -y rabbitmq-server redis-server
+RUN apt-get update && apt-get install -y rabbitmq-server redis-server netcat
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY ./cache /code/cache
 
 RUN mv /code/cache/main.py /code/
-# RUN python consume.py
+COPY wait-for-rabbitmq.sh /code/wait-for-rabbitmq.sh
+RUN chmod +x /code/wait-for-rabbitmq.sh
 
-CMD ["python", "main.py"]
+CMD ["./wait-for-rabbitmq.sh"]
