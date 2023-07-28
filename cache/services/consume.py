@@ -12,7 +12,7 @@ async def on_message(message: IncomingMessage):
     message = json.loads(message)
     print(message)
     try:
-        CacheService.insert(**message)
+        CacheService.set(**message)
     except Exception as e:
         print(f"Failed to insert into Redis: {e}")
         message.nack(requeue=True)

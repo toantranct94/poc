@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     API_PREFIX: str = "/api"
 
     description = """
-        Description
+        Caching service
     """
     debug: bool = True
 

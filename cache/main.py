@@ -17,7 +17,7 @@ async def on_message(message: IncomingMessage):
     message = json.loads(message)
     logging.info(message)  # Use logging.debug() instead of print()
     try:
-        CacheService.insert(**message)
+        CacheService.set(**message)
     except Exception as e:
         logging.error(f"Failed to insert into Redis: {e}")
         message.nack(requeue=True)
