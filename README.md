@@ -15,6 +15,8 @@ This project is licensed under the terms of the None license.
 ### Build & Run
 
 ```
+cd cache-service
+
 docker-compose up -d
 ```
 
