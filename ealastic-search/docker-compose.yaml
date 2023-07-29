@@ -1,0 +1,31 @@
+version: "3.10"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    ports:
+      - 9200:9200
+    networks:
+      - back
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.14.0
+    restart: always
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    volumes:
+      - ./logstash/config:/usr/share/logstash/pipeline
+      - ./logstash/config/mssql-jdbc-12.2.0.jre11.jar:/usr/share/logstash/drivers/mssql-jdbc-12.2.0.jre11.jar
+    networks:
+      - back
+    depends_on:
+      - elasticsearch
+
+networks:
+  back:
+    driver: bridge
