@@ -1,6 +1,9 @@
-# test-api
+# POC
 
-This project was generated via [init-fastapi](https://github.com/toantranct94/init-fastapi)! :tada:
+This is a POC project with
+
+- Cache with Redis & RabbitMQ
+- Integrate Elasticsearch, Logstash with SQL Server
 
 ## License
 
@@ -9,6 +12,16 @@ This project is licensed under the terms of the None license.
 
 ## Cache
 
+### Build & Run
+
 ```
+docker-compose up -d
+```
+
+## Elasticsearch
+
+```
+cd elastic-search
+
 docker-compose up -d
 ```
