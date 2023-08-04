@@ -6,6 +6,8 @@ services:
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=true
+      - "ELASTIC_PASSWORD=test@123"
       - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
     ports:
       - 9200:9200
